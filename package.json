@@ -1,0 +1,39 @@
+{
+  "name": "fast-pool-ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "check:types": "tsc",
+    "check:format:fix": "prettier --write . --plugin-search-dir=./node_modules --plugin=@trivago/prettier-plugin-sort-imports",
+    "check:lint": "eslint .",
+    "check:lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@stacks/connect": "7.3.1",
+    "@stacks/connect-react": "22.1.1",
+    "@stacks/network": "6.5.4",
+    "@stacks/transactions": "6.5.4",
+    "@stacks/ui": "^7.10.0",
+    "next": "13.4.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.13.0"
+  },
+  "devDependencies": {
+    "@stacks/prettier-config": "^0.0.10",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/react": "18.2.13",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "prettier": "2.8.8"
+  }
+}

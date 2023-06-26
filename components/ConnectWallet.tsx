@@ -1,3 +1,4 @@
+import { InfoCard } from "./InfoCard";
 import { AppConfig, UserSession, showConnect } from "@stacks/connect";
 import { useConnect } from "@stacks/connect-react";
 import { Button } from "@stacks/ui";
@@ -18,15 +19,18 @@ const ConnectWallet = () => {
 
   if (mounted && userSession.isUserSignedIn()) {
     return (
-      <div>
+      <InfoCard>
         <Button onClick={disconnect}>Disconnect Wallet</Button>
         <p>mainnet: {userSession.loadUserData().profile.stxAddress.mainnet}</p>
-        <p>testnet: {userSession.loadUserData().profile.stxAddress.testnet}</p>
-      </div>
+      </InfoCard>
     );
   }
 
-  return <Button onClick={() => doOpenAuth()}>Connect Wallet</Button>;
+  return (
+    <InfoCard>
+      <Button onClick={() => doOpenAuth()}>Connect Wallet</Button>
+    </InfoCard>
+  );
 };
 
 export default ConnectWallet;

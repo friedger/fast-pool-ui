@@ -1,15 +1,13 @@
-import { userSession } from "./ConnectWallet";
 import { useConnect } from "@stacks/connect-react";
-import { StacksMainnet, StacksTestnet } from "@stacks/network";
+import { StacksMainnet } from "@stacks/network";
 import {
   AnchorMode,
   PostConditionMode,
   listCV,
-  principalCV,
-  stringUtf8CV,
+  principalCV
 } from "@stacks/transactions";
-import { Stack, Button } from "@stacks/ui";
-import React, { useEffect, useState } from "react";
+import { Button, Stack } from "@stacks/ui";
+import { useEffect, useState } from "react";
 
 const users = [
   "SP123TY61PFFAEZBX3PNH7KG3663B3GBW440NMYX0",
@@ -40,10 +38,17 @@ const users = [
   "SPQ2WS8G6FG5VJR52BKX0XFGNEVHJ81DA3YKEVR8",
 ];
 const SetUsers = () => {
-  const { doContractCall } = useConnect();
-
+  const { userSession, doContractCall } = useConnect();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  if (
+    !userSession ||
+    userSession.loadUserData().profile.stx.mainnet !==
+      "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP"
+  ) {
+    return null;
+  }
 
   function setUsers() {
     doContractCall({

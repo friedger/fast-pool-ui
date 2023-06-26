@@ -159,7 +159,7 @@ select
 	pox3_events.lock_amount,
   pox3_events.locked,
 	pox3_events.unlock_burn_height::integer,
-	encode(pox3_events.tx_id, 'hex'),
+	encode(pox3_events.tx_id, 'hex') as txid,
 	pox3_events.block_height,
 	pox3_events.microblock_sequence,
 	pox3_events.tx_index,
@@ -196,7 +196,7 @@ export interface LastPox3EventResult {
   locked: number[];
   amount_ustx: number[];
   block_time: string[];
-  tx_id: string[];
+  txid: string[];
 }
 
 export const getLastPox3Events = async (address: string) => {

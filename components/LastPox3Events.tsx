@@ -82,7 +82,7 @@ function Event({
         <>
           <InfoCardRow>
             <InfoCardLabel>Pooled Stacking</InfoCardLabel>
-            <InfoCardValue>Locking Period extended</InfoCardValue>
+            <InfoCardValue>Locking period extended</InfoCardValue>
           </InfoCardRow>
           <InfoCardRow>
             <InfoCardLabel>Unlock cycle</InfoCardLabel>
@@ -133,7 +133,7 @@ export function LastPox3Events({ address }: { address: string }) {
     locked: [],
     amount_ustx: [],
     block_time: [],
-    tx_id: [],
+    txid: [],
   });
 
   useEffect(() => {
@@ -152,7 +152,7 @@ export function LastPox3Events({ address }: { address: string }) {
               <>
                 <InfoCardSection m="loose" key={index}>
                   {index === 0 ||
-                  pox3Events.tx_id[index - 1] !== pox3Events.tx_id[index] ? (
+                  pox3Events.txid[index - 1] !== pox3Events.txid[index] ? (
                     <>
                       <InfoCardRow>
                         Block height {blockHeight} (cycle #
@@ -161,7 +161,7 @@ export function LastPox3Events({ address }: { address: string }) {
                       </InfoCardRow>
                       <InfoCardRow>
                         <a
-                          href={`https://explorer.hiro.so/tx/${pox3Events.tx_id[index]}`}
+                          href={`https://explorer.hiro.so/txid/0x${pox3Events.txid[index]}`}
                           target="_blank"
                           rel="noreferrer"
                         >

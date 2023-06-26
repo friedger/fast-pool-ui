@@ -1,8 +1,10 @@
 import ConnectWallet from "../components/ConnectWallet";
+import { Hr } from "../components/Hr";
+import { InfoCard } from "../components/InfoCard";
 import { PendingMembers } from "../components/PendingMembers";
 import SetUsers from "../components/SetUsers";
 import { Status } from "../components/status/Status";
-import { Flex, Stack } from "@stacks/ui";
+import { Box, Flex, Stack } from "@stacks/ui";
 import Head from "next/head";
 
 export default function Home() {
@@ -15,14 +17,20 @@ export default function Home() {
       </Head>
 
       <main>
-        <Flex h="100vh" flexDirection="column">
-          <Stack height="100%" justifyContent="center">
-            <h1>Fast Pool Community</h1>
+        <Flex height="100%" justify="center" align="center">
+          <InfoCard>
+            <Box mx={["loose", "extra-loose"]}>
+              <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
+                <h1>Fast Pool Community</h1>
 
-            <Status cycleId={62} />
-            <Status cycleId={61} />
-            <Status cycleId={60} />
-          </Stack>
+                <Status cycleId={62} />
+                <Hr/>
+                <Status cycleId={61} />
+                <Hr/>
+                <Status cycleId={60} />
+              </Flex>
+            </Box>
+          </InfoCard>
         </Flex>
       </main>
     </div>

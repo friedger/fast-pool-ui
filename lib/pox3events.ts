@@ -167,7 +167,9 @@ select
 	pox3_events.delegate_to,
 	transactions.contract_call_contract_id,
 	transactions.contract_call_function_name,
-  blocks.burn_block_height
+  blocks.burn_block_height,
+  blocks.block_time,
+  transactions.tx_id
 from
   pox3_events join transactions on pox3_events.tx_id = transactions.tx_id join blocks on blocks.block_height = transactions.block_height
 where
@@ -192,6 +194,9 @@ export interface LastPox3EventResult {
   burn_block_height: number[];
   unlock_burn_height: number[];
   locked: number[];
+  amount_ustx: number[];
+  block_time: string[];
+  tx_id: string[];
 }
 
 export const getLastPox3Events = async (address: string) => {

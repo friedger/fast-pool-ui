@@ -1,12 +1,13 @@
+import { InfoCard } from "./InfoCard";
 import { useConnect } from "@stacks/connect-react";
 import { StacksMainnet } from "@stacks/network";
 import {
   AnchorMode,
   PostConditionMode,
   listCV,
-  principalCV
+  principalCV,
 } from "@stacks/transactions";
-import { Button, Stack } from "@stacks/ui";
+import { Box, Button, Stack } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
 const users = [
@@ -77,12 +78,14 @@ const SetUsers = () => {
   }
 
   return (
-    <Stack>
-      <h3>Fast Pool Auto Extend</h3>
-      {userSession.isUserSignedIn() && (
-        <Button onClick={setUsers}>Set Users</Button>
-      )}
-    </Stack>
+    <InfoCard>
+      <Box mx={["loose", "extra-loose"]}>
+        <h3>Fast Pool Auto Extend</h3>
+        {userSession.isUserSignedIn() && (
+          <Button onClick={setUsers}>Set Users</Button>
+        )}
+      </Box>
+    </InfoCard>
   );
 };
 

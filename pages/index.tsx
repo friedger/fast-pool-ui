@@ -19,14 +19,9 @@ export default function Home() {
           <Stack height="100%" justifyContent="center">
             <h1>Fast Pool Community</h1>
 
-            <Stack>
-              <Status cycleId={62} />
-              <Status cycleId={61} />
-              <Status cycleId={60} />
-              <ConnectWallet />
-              <SetUsers />
-              <PendingMembers cycleId={62} />
-            </Stack>
+            <Status cycleId={62} />
+            <Status cycleId={61} />
+            <Status cycleId={60} />
           </Stack>
         </Flex>
       </main>

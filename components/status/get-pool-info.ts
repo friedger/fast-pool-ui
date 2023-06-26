@@ -25,18 +25,19 @@ export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
     functionArgs: [uintCV(cycleId)],
     network,
     senderAddress: contractAddress,
-  })) as OptionalCV<UIntCV>;
+  })) as SomeCV<UIntCV>;
 
-  if (lastAggregationCommit.type === ClarityType.OptionalSome) {
-    const blockHeightToCheck = lastAggregationCommit.value.value;
-    let rewardSet = (await callReadOnlyFunction({
-      contractAddress,
-      contractName,
-      functionName: "get-reward-set-at-block",
-      functionArgs: [uintCV(cycleId), uintCV(blockHeightToCheck)],
-      network,
-      senderAddress: contractAddress,
-    })) as SomeCV<TupleCV>;
+  const blockHeightToCheck = lastAggregationCommit.value.value;
+  let rewardSet = (await callReadOnlyFunction({
+    contractAddress,
+    contractName,
+    functionName: "get-reward-set-at-block",
+    functionArgs: [uintCV(cycleId), uintCV(blockHeightToCheck)],
+    network,
+    senderAddress: contractAddress,
+  })) as OptionalCV<TupleCV>;
+
+  if (rewardSet.type === ClarityType.OptionalSome) {
     console.log("total-ustx from reward-set-at-block", blockHeightToCheck);
     console.log(
       cycleId,

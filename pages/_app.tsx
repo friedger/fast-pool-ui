@@ -1,6 +1,7 @@
-import { userSession } from "../components/ConnectWallet";
 import { Connect } from "@stacks/connect-react";
+import { ThemeProvider } from "@stacks/ui";
 import { AppProps } from "next/app";
+import { userSession } from "../components/ConnectWallet";
 
 function MyApp({ Component, pageProps }: AppProps) {
   let icon;
@@ -22,7 +23,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         userSession,
       }}
     >
-      <Component {...pageProps} />
+      <ThemeProvider>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </Connect>
   );
 }

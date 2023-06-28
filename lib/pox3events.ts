@@ -275,9 +275,7 @@ export async function getStackedAmounts(cycleId: number) {
           cycleId: details?.cycleId
             ? details.cycleId
             : columns.cycle_id[index] + 1,
-          stackedAmount:
-            (details?.stackedAmount ? details?.stackedAmount : BigInt(0)) +
-            BigInt(columns.increase_by[index]),
+          stackedAmount: BigInt(columns.locked[index]),
         };
       default:
         throw new Error(`Unknown method ${columns.name[index]}`);

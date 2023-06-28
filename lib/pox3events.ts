@@ -204,3 +204,96 @@ export const getLastPox3Events = async (address: string) => {
   console.log(result.data.columns);
   return result.data.columns as LastPox3EventResult;
 };
+
+const getStackedAmountsQuery = (cycleId: number) => `
+  select
+	stacker,
+	name,
+	(b.burn_block_height - 666050)/ 2100 as cycle_id,
+	locked,
+	start_burn_height,
+	burnchain_unlock_height,
+	lock_amount,
+	increase_by,
+  encode(tx_id, 'hex') as tx_id,
+  to_char(to_timestamp(b.burn_block_time::bigint), 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as timestamp
+from
+	pox3_events pe
+join blocks b on
+	b.block_height = pe.block_height
+where
+	name in ('delegate-stack-stx', 'delegate-stack-extend', 'delegate-stack-increase')
+	and pox_addr = 'bc1qs0kkdpsrzh3ngqgth7mkavlwlzr7lms2zv3wxe'
+	and (b.burn_block_height - 666050)/2100 < ${cycleId}
+  and burnchain_unlock_height > ${cycleId * 2100 + 666050}
+order by
+	stacker,
+	b.block_height asc,
+	microblock_sequence asc,
+	tx_index asc,
+	event_index asc
+`;
+
+export interface PoolMember {
+  cycleId: number;
+  stackedAmount: bigint;
+  unlockHeight: number;
+  timestamp: string;
+  txid: string;
+}
+
+export async function getStackedAmounts(cycleId: number) {
+  const result = await axios.post(BASE_URL, getStackedAmountsQuery(cycleId));
+  console.log(result.data.columns);
+
+  const stackers: {
+    [key: string]: PoolMember;
+  } = {};
+  const mergeDetails = (
+    columns: any,
+    index: number,
+    details?: { cycleId: number; stackedAmount: bigint }
+  ) => {
+    switch (columns.name[index]) {
+      case "delegate-stack-stx":
+        return {
+          cycleId: columns.cycle_id[index] + 1,
+          stackedAmount: BigInt(columns.lock_amount[index]),
+        };
+      case "delegate-stack-extend":
+        return {
+          cycleId:
+            (details?.cycleId
+              ? details?.cycleId
+              : columns.cycle_id[index] + 1) + 1,
+          stackedAmount: details?.stackedAmount
+            ? details.stackedAmount
+            : BigInt(columns.locked[index]),
+        };
+      case "delegate-stack-increase":
+        return {
+          cycleId: details?.cycleId
+            ? details.cycleId
+            : columns.cycle_id[index] + 1,
+          stackedAmount:
+            (details?.stackedAmount ? details?.stackedAmount : BigInt(0)) +
+            BigInt(columns.increase_by[index]),
+        };
+      default:
+        throw new Error(`Unknown method ${columns.name[index]}`);
+    }
+  };
+  for (let index = 0; index < result.data.columns.stacker.length; index++) {
+    const stacker = result.data.columns.stacker[index];
+    const existingDetails = stackers[stacker];
+    stackers[stacker] = {
+      ...mergeDetails(result.data.columns, index, existingDetails),
+      txid: `0x${result.data.columns.tx_id[index]}`,
+      timestamp: result.data.columns.timestamp[index],
+      unlockHeight: parseInt(
+        result.data.columns.burnchain_unlock_height[index]
+      ),
+    };
+  }
+  return stackers;
+}

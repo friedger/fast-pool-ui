@@ -22,7 +22,8 @@ export default function Home() {
             <Box mx={["loose", "extra-loose"]}>
               <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
                 <h1>Fast Pool Community</h1>
-
+                <Status cycleId={63} />
+                <Hr/>
                 <Status cycleId={62} />
                 <Hr/>
                 <Status cycleId={61} />

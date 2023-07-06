@@ -141,12 +141,17 @@ order by
 	distinct_rows.microblock_sequence desc,
 	distinct_rows.tx_index desc,
 	distinct_rows.event_index desc
-  limit 30
+  limit 300
 `;
 
-export const getPendingMembers = async (cycleId: number): Promise<string[]> => {
+export const getPendingMembers = async (
+  cycleId: number
+): Promise<{ stackers: string[]; amountsUstx: string[] }> => {
   const result = await axios.post(BASE_URL, getPendingMembersQuery(cycleId));
-  return result.data.columns.stacker;
+  return {
+    stackers: result.data.columns.stacker,
+    amountsUstx: result.data.columns.amount_ustx,
+  };
 };
 
 const getLastPox3EventsQuery = (address: string) => `
@@ -200,7 +205,6 @@ export interface LastPox3EventResult {
 
 export const getLastPox3Events = async (address: string) => {
   const result = await axios.post(BASE_URL, getLastPox3EventsQuery(address));
-  console.log(result.data.columns);
   return result.data.columns as LastPox3EventResult;
 };
 
@@ -243,7 +247,6 @@ export interface PoolMember {
 
 export async function getStackedAmounts(cycleId: number) {
   const result = await axios.post(BASE_URL, getStackedAmountsQuery(cycleId));
-  console.log(result.data.columns);
 
   const stackers: {
     [key: string]: PoolMember;

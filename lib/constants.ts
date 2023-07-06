@@ -1,4 +1,8 @@
-import { AccountsApi, Configuration } from "@stacks/blockchain-api-client";
+import {
+  AccountsApi,
+  Configuration,
+  TransactionsApi,
+} from "@stacks/blockchain-api-client";
 import { hexToBytes } from "@stacks/common";
 import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import { poxAddressToBtcAddress } from "@stacks/stacking";
@@ -31,10 +35,10 @@ export const network = mainnet
   ? new StacksMainnet({ url: STACKS_CORE_API_URL })
   : new StacksTestnet({ url: STACKS_CORE_API_URL });
 
-
 const config = new Configuration({
   basePath: STACKS_CORE_API_URL,
   fetchApi: fetch,
 });
 
-  export const accountsApi = new AccountsApi(config);
+export const accountsApi = new AccountsApi(config);
+export const transactionsApi = new TransactionsApi(config);

@@ -9,7 +9,7 @@ import {
   cvToString,
   hexToCV,
 } from "@stacks/transactions";
-import { Box, Text } from "@stacks/ui";
+import { Box, Stack, Text } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
 function errValueToString(value: UIntCV) {
@@ -43,9 +43,11 @@ function Result({ tx }) {
   return (
     <>
       {stackers.map((s, index) => (
-        <Text key={index} textStyle={"body.small"}>
-          <a href={`/u/${s}`}>{s}</a>: {results[index]}
-        </Text>
+        <Stack key={index}>
+          <Text textStyle={"body.small"}>
+            <a href={`/u/${s}`}>{s}</a>: {results[index]}
+          </Text>
+        </Stack>
       ))}
     </>
   );
@@ -64,7 +66,9 @@ export function ExtendedMany() {
       {txs.map((tx, index) => (
         <Box p="loose" key={index}>
           <Text textStyle={"body.large.medium"}>
-            {tx.sender_address} {tx.block_height}
+            <a href={`https://explorer.hiro.so/txid/${tx.tx_id}`}>
+              {tx.sender_address} {tx.block_height}
+            </a>
           </Text>
           <Result tx={tx} />
         </Box>

@@ -7,7 +7,6 @@ export async function getPox3RevokeTx() {
     limit: 50,
   });
   const revokeTxs = response.results.filter((newTx: any) => {
-    console.log(newTx.tx_type, newTx);
     return (
       newTx.tx_type === "contract_call" &&
       newTx.contract_call.function_name === "revoke-delegate-stx"

@@ -39,13 +39,12 @@ function Result({ tx }) {
   const stackers = (
     hexToCV(tx.contract_call.function_args[0].hex) as any
   ).list.map((arg: PrincipalCV) => cvToString(arg));
-  console.log({ results, stackers });
 
   return (
     <>
       {stackers.map((s, index) => (
         <Text key={index} textStyle={"body.small"}>
-          {s}: {results[index]}
+          <a href={`/u/${s}`}>{s}</a>: {results[index]}
         </Text>
       ))}
     </>

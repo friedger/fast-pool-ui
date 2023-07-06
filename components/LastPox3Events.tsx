@@ -147,7 +147,7 @@ export function LastPox3Events({ address }: { address: string }) {
       <InfoCard>
         <Box mx={["loose", "extra-loose"]}>
           <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
-            <h3>{truncateMiddle(address)}</h3>
+            <h3><a href={`https://explorer.hiro.so/address/${address}`}>{truncateMiddle(address)}</a></h3>
             {pox3Events.block_height.map((blockHeight, index) => (
               <>
                 <InfoCardSection m="loose" key={index}>

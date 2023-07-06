@@ -1,4 +1,3 @@
-import { int } from "@stacks/transactions/dist/cl";
 import axios from "axios";
 
 const BASE_URL = "https://api.stacksdata.info/v1/sql";

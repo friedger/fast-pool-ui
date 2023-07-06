@@ -31,7 +31,7 @@ from
 where
 	canonical = true
 	and microblock_canonical = true
-	and name != 'delegate-stack-increase'
+	and name = 'delegate-stx'
 order by
 	stacker,
 	block_height desc,

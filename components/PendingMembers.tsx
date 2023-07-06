@@ -1,26 +1,33 @@
 import { fastPool } from "../lib/constants";
 import { getPendingMembers } from "../lib/pox3events";
+import { getPox3RevokeTx } from "../lib/pox3txs";
 import { InfoCard, InfoCardRow, InfoCardSection } from "./InfoCard";
 import { useConnect } from "@stacks/connect-react";
 import { StacksMainnet } from "@stacks/network";
-import { StackingClient } from "@stacks/stacking";
 import {
   AnchorMode,
   PostConditionMode,
   listCV,
   principalCV,
 } from "@stacks/transactions";
-import { Box, Button, Flex, Stack } from "@stacks/ui";
+import { Box, Button, Flex } from "@stacks/ui";
 import { useEffect, useState } from "react";
+
+function hasMemberRevoked(member: string, revokeTxs: any[]) {
+  return revokeTxs.some((tx) => tx.sender_address === member);
+}
 
 export function PendingMembers({ cycleId }: { cycleId: number }) {
   const { doContractCall } = useConnect();
 
   const [pendingMembers, setPendingMembers] = useState([]);
+  const [revokeTxs, setRevokeTxs] = useState([]);
+
   useEffect(() => {
     getPendingMembers(cycleId).then((queryResult) =>
       setPendingMembers(queryResult)
     );
+    getPox3RevokeTx().then((pox3RevokeTxs) => setRevokeTxs(pox3RevokeTxs));
   }, [cycleId, setPendingMembers]);
 
   function delegateStackStxMany() {
@@ -45,6 +52,8 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
       },
     });
   }
+
+  console.log({ pendingMembers }, revokeTxs.map(t => t.sender_address));
   return (
     <Flex height="100%" justify="center" align="center">
       <InfoCard>
@@ -57,7 +66,13 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
             </p>
             <InfoCardSection>
               {pendingMembers.map((member) => (
-                <InfoCardRow key={member}>{member}</InfoCardRow>
+                <>
+                  {hasMemberRevoked(member, revokeTxs) ? (
+                    <InfoCardRow key={member}><s>{member}</s> (revoked)</InfoCardRow>
+                  ) : (
+                    <InfoCardRow key={member}>{member}</InfoCardRow>
+                  )}
+                </>
               ))}
             </InfoCardSection>
             <Button onClick={delegateStackStxMany}>Self-service extend</Button>

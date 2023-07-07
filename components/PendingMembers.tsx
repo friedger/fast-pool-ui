@@ -8,7 +8,7 @@ import {
   cvToString,
   hexToCV,
   listCV,
-  principalCV
+  principalCV,
 } from "@stacks/transactions";
 import { Box, Button, Flex } from "@stacks/ui";
 import { useEffect, useState } from "react";
@@ -62,7 +62,7 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
     getDelegateStackStxManyTxs().then((txs) => setDelegateStackStxManyTxs(txs));
   }, [cycleId, setPendingMembers, setRevokeTxs, setDelegateStackStxManyTxs]);
 
-  function delegateStackStxMany(start: number = 0, end: number = 30) {
+  function delegateStackStxMany(start: number, end: number) {
     const [contractAddress, contractName] = fastPool.stacks.split(".");
     doContractCall({
       network: new StacksMainnet(),
@@ -149,7 +149,9 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                 </InfoCardRow>
               ))}
             </InfoCardSection>
-            <Button onClick={delegateStackStxMany}>Self-service extend</Button>
+            <Button onClick={() => delegateStackStxMany(0, 30)}>
+              Self-service extend
+            </Button>
           </Flex>
         </Box>
       </InfoCard>

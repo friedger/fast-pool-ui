@@ -1,3 +1,17 @@
+import { useConnect } from "@stacks/connect-react";
+import { StacksMainnet } from "@stacks/network";
+import {
+  AnchorMode,
+  ClarityType,
+  ListCV,
+  PostConditionMode,
+  cvToString,
+  hexToCV,
+  listCV,
+  principalCV
+} from "@stacks/transactions";
+import { Box, Button, Flex } from "@stacks/ui";
+import { useEffect, useState } from "react";
 import { fastPool } from "../lib/constants";
 import { getDelegateStackStxManyTxs } from "../lib/fpTxs";
 import { getPendingMembers } from "../lib/pox3events";
@@ -10,21 +24,6 @@ import {
   InfoCardSection,
   InfoCardValue,
 } from "./InfoCard";
-import { useConnect } from "@stacks/connect-react";
-import { StacksMainnet } from "@stacks/network";
-import {
-  AnchorMode,
-  ClarityType,
-  ListCV,
-  PostConditionMode,
-  ResponseCV,
-  cvToString,
-  hexToCV,
-  listCV,
-  principalCV,
-} from "@stacks/transactions";
-import { Box, Button, Flex } from "@stacks/ui";
-import { Fragment, useEffect, useState } from "react";
 
 function hasMemberRevoked(member: string, revokeTxs: any[]) {
   return revokeTxs.some((tx) => tx.sender_address === member);
@@ -63,7 +62,7 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
     getDelegateStackStxManyTxs().then((txs) => setDelegateStackStxManyTxs(txs));
   }, [cycleId, setPendingMembers, setRevokeTxs, setDelegateStackStxManyTxs]);
 
-  function delegateStackStxMany() {
+  function delegateStackStxMany(start: number = 0, end: number = 30) {
     const [contractAddress, contractName] = fastPool.stacks.split(".");
     doContractCall({
       network: new StacksMainnet(),
@@ -73,29 +72,32 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
       functionName: "delegate-stack-stx-many",
       functionArgs: [
         listCV(
-          pendingMembers.stackers
-            .filter(
-              (user) =>
-                !hasMemberRevoked(user, revokeTxs) &&
-                !extendFailed(user, delegateStackStxManyTxs)
-            )
-            .slice(0, 30)
-            .map((user) => principalCV(user))
+          filteredStackers.slice(start, end).map((user) => principalCV(user))
         ),
       ],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [],
       onFinish: (data) => {
         console.log("onFinish:", data);
-        window
-          .open(`https://explorer.hiro.so/txid/${data.txId}`, "_blank")
-          .focus();
+        if (end > filteredStackers.length || end >= 300) {
+          window
+            .open(`https://explorer.hiro.so/txid/${data.txId}`, "_blank")
+            .focus();
+        } else {
+          delegateStackStxMany(end, end + 30);
+        }
       },
       onCancel: () => {
         console.log("onCancel:", "Transaction was canceled");
       },
     });
   }
+
+  const filteredStackers = pendingMembers.stackers.filter(
+    (user) =>
+      !hasMemberRevoked(user, revokeTxs) &&
+      !extendFailed(user, delegateStackStxManyTxs)
+  );
 
   console.log(delegateStackStxManyTxs);
 

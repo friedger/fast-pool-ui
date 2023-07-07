@@ -1,10 +1,7 @@
-import ConnectWallet from "../components/ConnectWallet";
 import { Hr } from "../components/Hr";
 import { InfoCard } from "../components/InfoCard";
-import { PendingMembers } from "../components/PendingMembers";
-import SetUsers from "../components/SetUsers";
 import { Status } from "../components/status/Status";
-import { Box, Flex, Stack } from "@stacks/ui";
+import { Box, Flex } from "@stacks/ui";
 import Head from "next/head";
 
 export default function Home() {
@@ -23,11 +20,11 @@ export default function Home() {
               <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
                 <h1>Fast Pool Community</h1>
                 <Status cycleId={63} />
-                <Hr/>
+                <Hr />
                 <Status cycleId={62} />
-                <Hr/>
+                <Hr />
                 <Status cycleId={61} />
-                <Hr/>
+                <Hr />
                 <Status cycleId={60} />
               </Flex>
             </Box>

@@ -1,22 +1,23 @@
 import { toHumanReadableStx } from "../../lib/unit-converts";
+import { Hr } from "../Hr";
 import {
-  InfoCard,
   InfoCardLabel,
   InfoCardRow,
   InfoCardSection,
   InfoCardValue,
 } from "../InfoCard";
 import { PoolStatus, getPoolInfo } from "./get-pool-info";
-import { ClarityType, cvToString } from "@stacks/transactions";
-import { Box, Flex, Stack, Text } from "@stacks/ui";
+import { ClarityType } from "@stacks/transactions";
+import { Box, Stack, Text } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
 export function Status({ cycleId }: { cycleId: number }) {
   const [poolStatus, setPoolStatus] = useState<PoolStatus>();
 
   useEffect(() => {
+    if (poolStatus !== undefined) return;
     getPoolInfo(cycleId).then((info) => setPoolStatus(info));
-  }, [cycleId]);
+  }, [cycleId, poolStatus]);
 
   if (!poolStatus) return <>Loading..</>;
 
@@ -44,8 +45,7 @@ export function Status({ cycleId }: { cycleId: number }) {
               : null}
           </InfoCardValue>
         </InfoCardRow>
-      </InfoCardSection>
-      <InfoCardSection>
+
         <InfoCardRow>
           <InfoCardLabel>PoxRowId</InfoCardLabel>
           <InfoCardValue>
@@ -57,6 +57,7 @@ export function Status({ cycleId }: { cycleId: number }) {
         <InfoCardRow>
           <InfoCardLabel>Locked</InfoCardLabel>
           <InfoCardValue>
+            &nbsp;
             {poolStatus.lockedAmount
               ? toHumanReadableStx(poolStatus.lockedAmount.value)
               : "none"}

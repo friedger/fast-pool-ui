@@ -22,7 +22,7 @@ import {
   listCV,
   principalCV,
 } from "@stacks/transactions";
-import { Box, Button, Flex } from "@stacks/ui";
+import { Box, Button, Flex, Text } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
 function hasMemberRevoked(member: string, revokeTxs: any[]) {
@@ -108,17 +108,20 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
       <InfoCard>
         <Box mx={["loose", "extra-loose"]}>
           <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
-            <h3>Pending Members cycle {cycleId}</h3>
+            <Text textStyle="body.large">Pending Members cycle #{cycleId}</Text>
             <p>
               List of largest members who are not yet stacking for the next
-              cycle, up to 300.
+              cycle,{" "}
+              {pendingMembers.totalRows.length > 0 ? (
+                <>
+                  showing {pendingMembers.totalRows.length} out of{" "}
+                  {pendingMembers.totalRows[0]}
+                </>
+              ) : (
+                "up to 300"
+              )}
+              .
             </p>
-            {pendingMembers.totalRows.length > 0 && (
-              <p>
-                Currently, there are {pendingMembers.totalRows[0]} potential
-                members.{" "}
-              </p>
-            )}
             <p>
               The list is filtered by {revokeTxs.length} revoke transactions and{" "}
               by{" "}
@@ -126,12 +129,30 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                 delegateStackStxManyTxs.filter((t) => t.tx_status === "pending")
                   .length
               }{" "}
-              pending out of {delegateStackStxManyTxs.length}{" "}
-              delegate-stack-stx-many transactions.
+              pending delegate-stack-stx-many transactions out of{" "}
+              {delegateStackStxManyTxs.length}.
             </p>
-            <p>
-              Self-service extend allows to extend 30 members per tansactions.
-            </p>
+            {pendingMembers.totalRows.length > 0 && (
+              <>
+                <Box my="loose">
+                  {filteredStackers.length > 0 ? (
+                    <>
+                      Self-service extend allows to extend up to 30 members per
+                      tansactions.
+                      <br />
+                      Helpers can extend {filteredStackers.length} pending
+                      members.
+                    </>
+                  ) : (
+                    <b>
+                      All pending members have been extended for cycle #
+                      {cycleId}.
+                    </b>
+                  )}
+                </Box>
+              </>
+            )}
+
             <InfoCardSection>
               {pendingMembers.stackers.map((member, index) => (
                 <InfoCardRow key={index}>

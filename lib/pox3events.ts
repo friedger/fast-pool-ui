@@ -146,11 +146,12 @@ order by
 
 export const getPendingMembers = async (
   cycleId: number
-): Promise<{ stackers: string[]; amountsUstx: string[] }> => {
+): Promise<{ stackers: string[]; amountsUstx: string[], totalRows: string[] }> => {
   const result = await axios.post(BASE_URL, getPendingMembersQuery(cycleId));
   return {
     stackers: result.data.columns.stacker,
     amountsUstx: result.data.columns.amount_ustx,
+    totalRows: result.data.columns.total_rows,
   };
 };
 

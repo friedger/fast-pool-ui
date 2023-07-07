@@ -48,9 +48,11 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
   const [pendingMembers, setPendingMembers] = useState<{
     stackers: string[];
     amountsUstx: string[];
+    totalRows: string[];
   }>({
     stackers: [],
     amountsUstx: [],
+    totalRows: [],
   });
   const [revokeTxs, setRevokeTxs] = useState([]);
   const [delegateStackStxManyTxs, setDelegateStackStxManyTxs] = useState([]);
@@ -109,8 +111,14 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
             <h3>Pending Members cycle {cycleId}</h3>
             <p>
               List of largest members who are not yet stacking for the next
-              cycle, up to 30.
+              cycle, up to 300.
             </p>
+            {pendingMembers.totalRows.length > 0 && (
+              <p>
+                Currently, there are {pendingMembers.totalRows[0]} potential
+                members.{" "}
+              </p>
+            )}
             <p>
               The list is filtered by {revokeTxs.length} revoke transactions and{" "}
               by{" "}
@@ -120,6 +128,9 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
               }{" "}
               pending out of {delegateStackStxManyTxs.length}{" "}
               delegate-stack-stx-many transactions.
+            </p>
+            <p>
+              Self-service extend allows to extend 30 members per tansactions.
             </p>
             <InfoCardSection>
               {pendingMembers.stackers.map((member, index) => (

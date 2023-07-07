@@ -14,7 +14,7 @@ export async function getDelegateStackStxManyTxs() {
     offset: 0,
   });
 
-  const delegateStackStxMany = response.results.concat(pendingTxs.results).filter((newTx: any) => {
+  const delegateStackStxMany = pendingTxs.results.concat(response.results).filter((newTx: any) => {
     return (
       newTx.tx_type === "contract_call" &&
       newTx.contract_call.contract_id === fastPool.stacks &&

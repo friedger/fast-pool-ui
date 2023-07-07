@@ -2,6 +2,7 @@ import { getDelegateStackStxManyTxs } from "../lib/fpTxs";
 import { toHumanReadableStx } from "../lib/unit-converts";
 import {
   ClarityType,
+  ListCV,
   PrincipalCV,
   ResponseCV,
   TupleCV,
@@ -14,7 +15,11 @@ import { useEffect, useState } from "react";
 
 function errValueToString(value: UIntCV) {
   if (value.value === BigInt(9000)) {
-    return "Revoked";
+    return "Revoked (9000)";
+  } else if (value.value === BigInt(603)) {
+    return "Duplicate (603)";
+  } else if (value.value === BigInt(21000)) {
+    return "End of membership (21000)";
   } else {
     return `Error ${cvToString(value)}`;
   }
@@ -29,16 +34,19 @@ function okValueToString(value: TupleCV) {
 }
 
 function Result({ tx }) {
-  const results = (hexToCV(tx.tx_result.hex) as any).value.data[
-    "locking-result"
-  ].list.map((r: ResponseCV) =>
-    r.type === ClarityType.ResponseOk
-      ? okValueToString(r.value as TupleCV)
-      : errValueToString(r.value as UIntCV)
-  );
-  const stackers = (
-    hexToCV(tx.contract_call.function_args[0].hex) as any
-  ).list.map((arg: PrincipalCV) => cvToString(arg));
+  const stackersCV = hexToCV(
+    tx.contract_call.function_args[0].hex
+  ) as any as ListCV;
+
+  const results = tx.tx_result
+    ? (hexToCV(tx.tx_result.hex) as any).value.data["locking-result"].list.map(
+        (r: ResponseCV) =>
+          r.type === ClarityType.ResponseOk
+            ? okValueToString(r.value as TupleCV)
+            : errValueToString(r.value as UIntCV)
+      )
+    : Array(stackersCV.list.length).fill("pending");
+  const stackers = stackersCV.list.map((arg: PrincipalCV) => cvToString(arg));
 
   return (
     <>
@@ -65,7 +73,7 @@ export function ExtendedMany() {
       <Text textStyle={"body.large"}>Delegated Stack Stx Many</Text>
       {txs.map((tx, index) => (
         <Box p="loose" key={index}>
-          <Text textStyle={"body.large.medium"}>
+          <Text textStyle={"body.large.medium"} mb="base-tight">
             <a href={`https://explorer.hiro.so/txid/${tx.tx_id}`}>
               {tx.sender_address} {tx.block_height}
             </a>

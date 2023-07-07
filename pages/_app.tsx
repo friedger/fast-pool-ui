@@ -1,7 +1,8 @@
 import { userSession } from "../components/ConnectWallet";
 import { Connect } from "@stacks/connect-react";
-import { CSSReset, ThemeProvider } from "@stacks/ui";
+import { CSSReset, Flex, Text, ThemeProvider } from "@stacks/ui";
 import { AppProps } from "next/app";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   let icon;
@@ -25,7 +26,20 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <ThemeProvider>
         {CSSReset}
-        <Component {...pageProps} />
+        <>
+          <Head>
+            <title>Fast Pool Community</title>
+            <meta
+              name="description"
+              content="Community page for FAST Pool (v2)"
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <Flex height="100%" justify="center" align="center" m="extra-loose">
+            <Text textStyle="body.large">Fast Pool Community</Text>
+          </Flex>
+          <Component {...pageProps} />
+        </>
       </ThemeProvider>
     </Connect>
   );

@@ -1,3 +1,15 @@
+import { fastPool } from "../lib/constants";
+import { getDelegateStackStxManyTxs } from "../lib/fpTxs";
+import { getPendingMembers } from "../lib/pox3events";
+import { getPox3RevokeTx } from "../lib/pox3txs";
+import { toHumanReadableStx } from "../lib/unit-converts";
+import {
+  InfoCard,
+  InfoCardLabel,
+  InfoCardRow,
+  InfoCardSection,
+  InfoCardValue,
+} from "./InfoCard";
 import { useConnect } from "@stacks/connect-react";
 import { StacksMainnet } from "@stacks/network";
 import {
@@ -12,25 +24,13 @@ import {
 } from "@stacks/transactions";
 import { Box, Button, Flex } from "@stacks/ui";
 import { useEffect, useState } from "react";
-import { fastPool } from "../lib/constants";
-import { getDelegateStackStxManyTxs } from "../lib/fpTxs";
-import { getPendingMembers } from "../lib/pox3events";
-import { getPox3RevokeTx } from "../lib/pox3txs";
-import { toHumanReadableStx } from "../lib/unit-converts";
-import {
-  InfoCard,
-  InfoCardLabel,
-  InfoCardRow,
-  InfoCardSection,
-  InfoCardValue,
-} from "./InfoCard";
 
 function hasMemberRevoked(member: string, revokeTxs: any[]) {
   return revokeTxs.some((tx) => tx.sender_address === member);
 }
 
 function extendFailed(member: string, delegateStackStxManyTxs: any[]) {
-  return delegateStackStxManyTxs.some((tx) =>
+  return delegateStackStxManyTxs.find((tx) =>
     (hexToCV(tx.contract_call.function_args[0].hex) as ListCV).list.some(
       (stacker, index) =>
         cvToString(stacker) === member &&
@@ -111,12 +111,21 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
               List of largest members who are not yet stacking for the next
               cycle, up to 30.
             </p>
+            <p>
+              The list is filtered by {revokeTxs.length} revoke transactions and{" "}
+              by{" "}
+              {
+                delegateStackStxManyTxs.filter((t) => t.tx_status === "pending")
+                  .length
+              }{" "}
+              pending out of {delegateStackStxManyTxs.length}{" "}
+              delegate-stack-stx-many transactions.
+            </p>
             <InfoCardSection>
               {pendingMembers.stackers.map((member, index) => (
                 <InfoCardRow key={index}>
                   {hasMemberRevoked(member, revokeTxs) ? (
                     <>
-                      {" "}
                       <InfoCardLabel>
                         <s>{member}</s>
                       </InfoCardLabel>
@@ -124,7 +133,6 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                     </>
                   ) : extendFailed(member, delegateStackStxManyTxs) ? (
                     <>
-                      {" "}
                       <InfoCardLabel>
                         <s>{member}</s>
                       </InfoCardLabel>

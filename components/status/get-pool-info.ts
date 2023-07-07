@@ -1,4 +1,3 @@
-import { fastPool, network, poxContractAddress } from "../../lib/constants";
 import {
   ClarityType,
   OptionalCV,
@@ -6,9 +5,9 @@ import {
   TupleCV,
   UIntCV,
   callReadOnlyFunction,
-  cvToString,
-  uintCV,
+  uintCV
 } from "@stacks/transactions";
+import { fastPool, network, poxContractAddress } from "../../lib/constants";
 
 export interface PoolStatus {
   poxAddrIndex?: SomeCV<UIntCV>;
@@ -27,7 +26,7 @@ export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
     senderAddress: contractAddress,
   })) as SomeCV<UIntCV>;
 
-  const blockHeightToCheck = lastAggregationCommit.value.value;
+  let blockHeightToCheck = lastAggregationCommit.value.value;
   let rewardSet = (await callReadOnlyFunction({
     contractAddress,
     contractName,
@@ -37,6 +36,17 @@ export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
     senderAddress: contractAddress,
   })) as OptionalCV<TupleCV>;
 
+  if (rewardSet.type === ClarityType.OptionalNone) {
+    blockHeightToCheck = blockHeightToCheck - BigInt(1);
+    rewardSet = (await callReadOnlyFunction({
+      contractAddress,
+      contractName,
+      functionName: "get-reward-set-at-block",
+      functionArgs: [uintCV(cycleId), uintCV(blockHeightToCheck)],
+      network,
+      senderAddress: contractAddress,
+    })) as OptionalCV<TupleCV>;
+  }
   if (rewardSet.type === ClarityType.OptionalSome) {
     console.log("total-ustx from reward-set-at-block", blockHeightToCheck);
     console.log(

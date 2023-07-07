@@ -1,7 +1,7 @@
 import { Hr } from "../components/Hr";
 import { InfoCard } from "../components/InfoCard";
 import { Status } from "../components/status/Status";
-import { Box, Flex } from "@stacks/ui";
+import { Box, Flex, Text } from "@stacks/ui";
 import Head from "next/head";
 
 export default function Home() {
@@ -18,7 +18,6 @@ export default function Home() {
           <InfoCard>
             <Box mx={["loose", "extra-loose"]}>
               <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
-                <h1>Fast Pool Community</h1>
                 <Status cycleId={63} />
                 <Hr />
                 <Status cycleId={62} />

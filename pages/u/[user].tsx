@@ -26,7 +26,7 @@ const User = () => {
             <StackingAmount cycleId={62} user={user} />
             <StackingAmount cycleId={61} user={user} />
             <StackingAmount cycleId={60} user={user} />
-            <LastPox3Events address={user} />;
+            <LastPox3Events address={user} />
           </Flex>
         </Box>
       </InfoCard>

@@ -35,7 +35,7 @@ export function StackingAmount({
   if (!stackingInfo) return <>Loading...</>;
   return (
     <InfoCardRow>
-      <InfoCardLabel>Stacking amount (cycle #{cycleId})</InfoCardLabel>
+      <InfoCardLabel>Stacked amount (cycle #{cycleId})</InfoCardLabel>
       <InfoCardValue>
         {toHumanReadableStx(stackingInfo.value)} STX
       </InfoCardValue>

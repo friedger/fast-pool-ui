@@ -9,7 +9,7 @@ import {
   InfoCardSection,
   InfoCardValue,
 } from "./InfoCard";
-import { Box, Flex } from "@stacks/ui";
+import { Box, Flex, Text } from "@stacks/ui";
 import { Fragment, useEffect, useState } from "react";
 
 function burnHeightToCycle(burnHeight: number) {
@@ -147,6 +147,10 @@ export function LastPox3Events({ address }: { address: string }) {
       {pox3Events.block_height.map((blockHeight, index) => (
         <Fragment key={index}>
           <InfoCardSection m="loose">
+            <Text textStyle="body.small.medium">
+              Revoke-delegation/stop-pooling transactions are not (yet) part of
+              the list below.
+            </Text>
             {index === 0 ||
             pox3Events.txid[index - 1] !== pox3Events.txid[index] ? (
               <>

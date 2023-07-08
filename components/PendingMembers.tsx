@@ -3,6 +3,7 @@ import { getDelegateStackStxManyTxs } from "../lib/fpTxs";
 import { getPendingMembers } from "../lib/pox3events";
 import { getPox3RevokeTx } from "../lib/pox3txs";
 import { toHumanReadableStx } from "../lib/unit-converts";
+import { userSession } from "./ConnectWallet";
 import {
   InfoCard,
   InfoCardLabel,
@@ -25,34 +26,54 @@ import {
 import { Box, Button, Flex, Text } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
-function hasMemberRevoked(member: string, revokeTxs: any[]) {
-  return revokeTxs.some((tx) => tx.sender_address === member);
+function hasMemberRevoked(
+  member: string,
+  blockHeight: number,
+  revokeTxs: any[]
+) {
+  return revokeTxs.some(
+    (tx) => tx.block_height > blockHeight && tx.sender_address === member
+  );
 }
 
-function extendFailed(member: string, delegateStackStxManyTxs: any[]) {
-  return delegateStackStxManyTxs.find((tx) =>
-    (hexToCV(tx.contract_call.function_args[0].hex) as ListCV).list.some(
-      (stacker, index) =>
-        cvToString(stacker) === member &&
-        (tx.tx_status === "pending" ||
-          (hexToCV(tx.tx_result.hex) as any).value.data["locking-result"].list[
-            index
-          ].type === ClarityType.ResponseErr)
-    )
+function extendFailed(
+  member: string,
+  blockHeight: number,
+  delegateStackStxManyTxs: any[]
+) {
+  return delegateStackStxManyTxs.find(
+    (tx) =>
+      tx.block_height > blockHeight &&
+      (hexToCV(tx.contract_call.function_args[0].hex) as ListCV).list.some(
+        (stacker, index) =>
+          cvToString(stacker) === member &&
+          (tx.tx_status === "pending" ||
+            (hexToCV(tx.tx_result.hex) as any).value.data["locking-result"]
+              .list[index].type === ClarityType.ResponseErr)
+      )
   );
 }
 
 export function PendingMembers({ cycleId }: { cycleId: number }) {
-  const { doContractCall } = useConnect();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const { doContractCall, doOpenAuth } = useConnect();
+
+  const address =
+    (mounted && userSession.isUserSignedIn()) ??
+    userSession.loadUserData()?.profile?.stxAddress;
 
   const [pendingMembers, setPendingMembers] = useState<{
     stackers: string[];
     amountsUstx: string[];
-    totalRows: string[];
+    totalRows: number[];
+    blockHeights: number[];
   }>({
     stackers: [],
     amountsUstx: [],
     totalRows: [],
+    blockHeights: [],
   });
   const [revokeTxs, setRevokeTxs] = useState([]);
   const [delegateStackStxManyTxs, setDelegateStackStxManyTxs] = useState([]);
@@ -96,9 +117,13 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
   }
 
   const filteredStackers = pendingMembers.stackers.filter(
-    (user) =>
-      !hasMemberRevoked(user, revokeTxs) &&
-      !extendFailed(user, delegateStackStxManyTxs)
+    (user, index) =>
+      !hasMemberRevoked(user, pendingMembers.blockHeights[index], revokeTxs) &&
+      !extendFailed(
+        user,
+        pendingMembers.blockHeights[index],
+        delegateStackStxManyTxs
+      )
   );
 
   console.log(delegateStackStxManyTxs);
@@ -156,17 +181,29 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
             <InfoCardSection>
               {pendingMembers.stackers.map((member, index) => (
                 <InfoCardRow key={index}>
-                  {hasMemberRevoked(member, revokeTxs) ? (
+                  {hasMemberRevoked(
+                    member,
+                    pendingMembers.blockHeights[index],
+                    revokeTxs
+                  ) ? (
                     <>
                       <InfoCardLabel>
-                        <s>{member}</s>
+                        <s>
+                          <a href={`/u/${member}`}>{member}</a>
+                        </s>
                       </InfoCardLabel>
                       <InfoCardValue>(revoked)</InfoCardValue>
                     </>
-                  ) : extendFailed(member, delegateStackStxManyTxs) ? (
+                  ) : extendFailed(
+                      member,
+                      pendingMembers.blockHeights[index],
+                      delegateStackStxManyTxs
+                    ) ? (
                     <>
                       <InfoCardLabel>
-                        <s>{member}</s>
+                        <s>
+                          <a href={`/u/${member}`}>{member}</a>
+                        </s>
                       </InfoCardLabel>
                       <InfoCardValue>
                         {toHumanReadableStx(
@@ -177,7 +214,9 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                     </>
                   ) : (
                     <>
-                      <InfoCardLabel>{member}</InfoCardLabel>
+                      <InfoCardLabel>
+                        <a href={`/u/${member}`}>{member}</a>
+                      </InfoCardLabel>
                       <InfoCardValue>
                         {toHumanReadableStx(
                           pendingMembers.amountsUstx[index],
@@ -189,9 +228,13 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                 </InfoCardRow>
               ))}
             </InfoCardSection>
-            <Button onClick={() => delegateStackStxMany(0, 30)}>
-              Self-service extend
-            </Button>
+            {address ? (
+              <Button onClick={() => delegateStackStxMany(0, 30)}>
+                Self-service extend
+              </Button>
+            ) : (
+              <Button onClick={() => doOpenAuth()}>Authenticate</Button>
+            )}
           </Flex>
         </Box>
       </InfoCard>

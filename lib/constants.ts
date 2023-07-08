@@ -5,7 +5,6 @@ import {
 } from "@stacks/blockchain-api-client";
 import { hexToBytes } from "@stacks/common";
 import { StacksMainnet, StacksTestnet } from "@stacks/network";
-import { poxAddressToBtcAddress } from "@stacks/stacking";
 import { bufferCV, tupleCV } from "@stacks/transactions";
 
 export const fastPool = {
@@ -24,6 +23,11 @@ const mainnet = true;
 export const poxContractAddress = mainnet
   ? "SP000000000000000000002Q6VF78"
   : "ST000000000000000000002AMW42H";
+
+export const fastPoolHelper = {
+  address: "SPN4Y5QPGQA8882ZXW90ADC2DHYXMSTN8VAR8C3X",
+  name: "fp-stx-account-helper",
+};
 
 const STACKS_CORE_API_URL = mainnet
   ? "https://proportionate-holy-knowledge.stacks-mainnet.discover.quiknode.pro/057f49d7f2148311cb0b0f12dfc9a751c02dba05"

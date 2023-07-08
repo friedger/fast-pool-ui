@@ -1,6 +1,10 @@
-import { validateStacksAddress } from "@stacks/transactions";
-import { useRouter } from "next/router";
+import { InfoCard } from "../../components/InfoCard";
 import { LastPox3Events } from "../../components/LastPox3Events";
+import { StackingAmount } from "../../components/StackingAmount";
+import { truncateMiddle } from "../../lib/transactions";
+import { validateStacksAddress } from "@stacks/transactions";
+import { Box, Flex } from "@stacks/ui";
+import { useRouter } from "next/router";
 
 const User = () => {
   const router = useRouter();
@@ -9,7 +13,25 @@ const User = () => {
   if (!user || !validateStacksAddress(user.split(".")[0])) {
     return <>Invalid STX address</>;
   }
-  return <LastPox3Events address={user}/>;
+  return (
+    <Flex height="100%" justify="center" align="center">
+      <InfoCard>
+        <Box mx={["loose", "extra-loose"]}>
+          <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
+            <h3>
+              <a href={`https://explorer.hiro.so/address/${user}`}>
+                {truncateMiddle(user)}
+              </a>
+            </h3>
+            <StackingAmount cycleId={62} user={user} />
+            <StackingAmount cycleId={61} user={user} />
+            <StackingAmount cycleId={60} user={user} />
+            <LastPox3Events address={user} />;
+          </Flex>
+        </Box>
+      </InfoCard>
+    </Flex>
+  );
 };
 
 export default User;

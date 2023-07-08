@@ -10,7 +10,7 @@ import {
   InfoCardValue,
 } from "./InfoCard";
 import { Box, Flex } from "@stacks/ui";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 function burnHeightToCycle(burnHeight: number) {
   if (burnHeight < 666050) return null;
@@ -143,44 +143,36 @@ export function LastPox3Events({ address }: { address: string }) {
   }, [address, setPox3Events]);
 
   return (
-    <Flex height="100%" justify="center" align="center">
-      <InfoCard>
-        <Box mx={["loose", "extra-loose"]}>
-          <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
-            <h3><a href={`https://explorer.hiro.so/address/${address}`}>{truncateMiddle(address)}</a></h3>
-            {pox3Events.block_height.map((blockHeight, index) => (
+    <>
+      {pox3Events.block_height.map((blockHeight, index) => (
+        <Fragment key={index}>
+          <InfoCardSection m="loose">
+            {index === 0 ||
+            pox3Events.txid[index - 1] !== pox3Events.txid[index] ? (
               <>
-                <InfoCardSection m="loose" key={index}>
-                  {index === 0 ||
-                  pox3Events.txid[index - 1] !== pox3Events.txid[index] ? (
-                    <>
-                      <InfoCardRow>
-                        Block height {blockHeight} (cycle #
-                        {burnHeightToCycle(pox3Events.burn_block_height[index])}
-                        )
-                      </InfoCardRow>
-                      <InfoCardRow>
-                        <a
-                          href={`https://explorer.hiro.so/txid/0x${pox3Events.txid[index]}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {truncateMiddle(
-                            pox3Events.contract_call_contract_id[index]
-                          )}
-                          .{pox3Events.contract_call_function_name[index]}
-                        </a>
-                      </InfoCardRow>
-                    </>
-                  ) : null}
-                  <Event pox3Events={pox3Events} index={index} />
-                </InfoCardSection>
-                <Hr />
+                <InfoCardRow>
+                  Block height {blockHeight} (cycle #
+                  {burnHeightToCycle(pox3Events.burn_block_height[index])})
+                </InfoCardRow>
+                <InfoCardRow>
+                  <a
+                    href={`https://explorer.hiro.so/txid/0x${pox3Events.txid[index]}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {truncateMiddle(
+                      pox3Events.contract_call_contract_id[index]
+                    )}
+                    .{pox3Events.contract_call_function_name[index]}
+                  </a>
+                </InfoCardRow>
               </>
-            ))}
-          </Flex>
-        </Box>
-      </InfoCard>
-    </Flex>
+            ) : null}
+            <Event pox3Events={pox3Events} index={index} />
+          </InfoCardSection>
+          <Hr />
+        </Fragment>
+      ))}
+    </>
   );
 }

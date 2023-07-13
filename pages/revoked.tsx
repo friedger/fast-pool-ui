@@ -5,7 +5,7 @@ const LastRevokedTransactions = () => {
   return (
     <>
       <ConnectWallet />
-      <Revoked cycleId={63} />
+      <Revoked />
     </>
   );
 };

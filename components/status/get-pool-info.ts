@@ -1,3 +1,4 @@
+import { fastPool, network, poxContractAddress } from "../../lib/constants";
 import {
   ClarityType,
   OptionalCV,
@@ -5,14 +6,14 @@ import {
   TupleCV,
   UIntCV,
   callReadOnlyFunction,
-  uintCV
+  uintCV,
 } from "@stacks/transactions";
-import { fastPool, network, poxContractAddress } from "../../lib/constants";
 
 export interface PoolStatus {
   poxAddrIndex?: SomeCV<UIntCV>;
   lastAggregationCommit: OptionalCV<UIntCV>;
   lockedAmount?: UIntCV;
+  lockedAmountFromFP?: UIntCV;
 }
 
 export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
@@ -65,7 +66,7 @@ export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
       senderAddress: contractAddress,
     })) as SomeCV<UIntCV>;
 
-    rewardSet = (await callReadOnlyFunction({
+    const rewardSetFromPox3 = (await callReadOnlyFunction({
       contractAddress: poxContractAddress,
       contractName: "pox-3",
       functionName: "get-reward-set-pox-address",
@@ -76,7 +77,8 @@ export async function getPoolInfo(cycleId: number): Promise<PoolStatus> {
     return {
       poxAddrIndex,
       lastAggregationCommit,
-      lockedAmount: rewardSet.value.data["total-ustx"] as UIntCV,
+      lockedAmount: rewardSetFromPox3.value.data["total-ustx"] as UIntCV,
+      lockedAmountFromFP: rewardSet.value.data["total-ustx"] as UIntCV,
     };
   } else {
     return {

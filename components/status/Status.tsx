@@ -63,6 +63,15 @@ export function Status({ cycleId }: { cycleId: number }) {
               : "none"}
           </InfoCardValue>
         </InfoCardRow>
+        <InfoCardRow>
+          <InfoCardLabel>Locked</InfoCardLabel>
+          <InfoCardValue>
+            &nbsp;
+            {poolStatus.lockedAmountFromFP
+              ? toHumanReadableStx(poolStatus.lockedAmountFromFP.value)
+              : "none"}
+          </InfoCardValue>
+        </InfoCardRow>
       </InfoCardSection>
     </Box>
   );

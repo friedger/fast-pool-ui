@@ -23,6 +23,7 @@ const User = () => {
                 {truncateMiddle(user)}
               </a>
             </h3>
+            <StackingAmount cycleId={63} user={user} />
             <StackingAmount cycleId={62} user={user} />
             <StackingAmount cycleId={61} user={user} />
             <StackingAmount cycleId={60} user={user} />

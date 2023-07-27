@@ -25,16 +25,18 @@ export function Status({ cycleId }: { cycleId: number }) {
     <Box m="loose">
       <Stack>
         <Text textStyle="body.large.medium">Reward Set for</Text>
-        <Text
-          fontSize="24px"
-          fontFamily="Open Sauce"
-          fontWeight={500}
-          letterSpacing="-0.02em"
-          mt="extra-tight"
-          pb="base-loose"
-        >
-          Cycle {cycleId}
-        </Text>
+        <a href={`/cycle/${cycleId}`}>
+          <Text
+            fontSize="24px"
+            fontFamily="Open Sauce"
+            fontWeight={500}
+            letterSpacing="-0.02em"
+            mt="extra-tight"
+            pb="base-loose"
+          >
+            Cycle {cycleId}
+          </Text>
+        </a>
       </Stack>
       <InfoCardSection>
         <InfoCardRow>

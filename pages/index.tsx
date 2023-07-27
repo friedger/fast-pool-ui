@@ -1,7 +1,7 @@
 import { Hr } from "../components/Hr";
 import { InfoCard } from "../components/InfoCard";
 import { Status } from "../components/status/Status";
-import { CURRENT_CYCLE } from "../lib/constants";
+import { NEXT_CYCLE } from "../lib/constants";
 import { Box, Flex, Text } from "@stacks/ui";
 import Head from "next/head";
 
@@ -19,13 +19,13 @@ export default function Home() {
           <InfoCard>
             <Box mx={["loose", "extra-loose"]}>
               <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
-                <Status cycleId={CURRENT_CYCLE - 1} />
+                <Status cycleId={NEXT_CYCLE - 1} />
                 <Hr />
-                <Status cycleId={CURRENT_CYCLE - 2} />
+                <Status cycleId={NEXT_CYCLE - 2} />
                 <Hr />
-                <Status cycleId={CURRENT_CYCLE - 3} />
+                <Status cycleId={NEXT_CYCLE - 3} />
                 <Hr />
-                <Status cycleId={CURRENT_CYCLE - 4} />
+                <Status cycleId={NEXT_CYCLE - 4} />
               </Flex>
             </Box>
           </InfoCard>

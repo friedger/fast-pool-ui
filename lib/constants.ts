@@ -7,7 +7,7 @@ import { hexToBytes } from "@stacks/common";
 import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import { bufferCV, tupleCV } from "@stacks/transactions";
 
-export const NEXT_CYCLE = 67;
+export const NEXT_CYCLE = 68;
 
 export const fastPool = {
   stacks: "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox-fast-pool-v2",
@@ -17,6 +17,10 @@ export const fastPool = {
     version: bufferCV(hexToBytes("04")),
   }),
 };
+
+export const fastPoolPayout = {
+  stacks: "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.fp-payout-v1",
+}
 
 // console.log(poxAddressToBtcAddress(fastPool.rewardPoxAddrCV, "mainnet"));
 // => bc1qs0kkdpsrzh3ngqgth7mkavlwlzr7lms2zv3wxe

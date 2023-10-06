@@ -7,7 +7,7 @@ import { hexToBytes } from "@stacks/common";
 import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import { bufferCV, tupleCV } from "@stacks/transactions";
 
-export const NEXT_CYCLE = 69;
+export const NEXT_CYCLE = 70;
 
 export const fastPool = {
   stacks: "SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP.pox-fast-pool-v2",

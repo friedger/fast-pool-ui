@@ -36,7 +36,7 @@ export const fastPoolHelper = {
 };
 
 const STACKS_CORE_API_URL = mainnet
-  ? "https://proportionate-holy-knowledge.stacks-mainnet.discover.quiknode.pro/057f49d7f2148311cb0b0f12dfc9a751c02dba05"
+  ? "https://wiser-lively-patina.stacks-mainnet.quiknode.pro/2034a802da68010bc5f1aa482cd2131e3d14d4cf"
   : //"https://api.mainnet.hiro.so"
     //"https://stacks-node.planbetter.org"
     "https://2-1-api.testnet.hiro.so";

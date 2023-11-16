@@ -1,6 +1,7 @@
 import { InfoCard } from "../../components/InfoCard";
 import { LastPox3Events } from "../../components/LastPox3Events";
 import { StackingAmount } from "../../components/StackingAmount";
+import { StackingStatus } from "../../components/StackingStatus";
 import { NEXT_CYCLE } from "../../lib/constants";
 import { truncateMiddle } from "../../lib/transactions";
 import { validateStacksAddress } from "@stacks/transactions";
@@ -24,6 +25,7 @@ const User = () => {
                 {truncateMiddle(user)}
               </a>
             </h3>
+            <StackingStatus user={user} />
             <StackingAmount cycleId={NEXT_CYCLE - 1} user={user} />
             <StackingAmount cycleId={NEXT_CYCLE - 2} user={user} />
             <StackingAmount cycleId={NEXT_CYCLE - 3} user={user} />

@@ -36,14 +36,14 @@ function hasMemberRevoked(
   );
 }
 
-function extendFailed(
+function pendingOrExtendFailed(
   member: string,
   blockHeight: number,
   delegateStackStxManyTxs: any[]
 ) {
   return delegateStackStxManyTxs.find(
     (tx) =>
-      tx.block_height > blockHeight &&
+      (tx.tx_status === "pending" || tx.block_height > blockHeight) &&
       (hexToCV(tx.contract_call.function_args[0].hex) as ListCV).list.some(
         (stacker, index) =>
           cvToString(stacker) === member &&
@@ -119,7 +119,7 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
   const filteredStackers = pendingMembers.stackers.filter(
     (user, index) =>
       !hasMemberRevoked(user, pendingMembers.blockHeights[index], revokeTxs) &&
-      !extendFailed(
+      !pendingOrExtendFailed(
         user,
         pendingMembers.blockHeights[index],
         delegateStackStxManyTxs
@@ -194,7 +194,7 @@ export function PendingMembers({ cycleId }: { cycleId: number }) {
                       </InfoCardLabel>
                       <InfoCardValue>(revoked)</InfoCardValue>
                     </>
-                  ) : extendFailed(
+                  ) : pendingOrExtendFailed(
                       member,
                       pendingMembers.blockHeights[index],
                       delegateStackStxManyTxs

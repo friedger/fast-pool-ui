@@ -144,13 +144,13 @@ export function LastPox3Events({ address }: { address: string }) {
 
   return (
     <>
+      <Text textStyle="body.small.medium">
+        Revoke-delegation/stop-pooling transactions are not (yet) part of the
+        list below.
+      </Text>
       {pox3Events.block_height.map((blockHeight, index) => (
         <Fragment key={index}>
           <InfoCardSection m="loose">
-            <Text textStyle="body.small.medium">
-              Revoke-delegation/stop-pooling transactions are not (yet) part of
-              the list below.
-            </Text>
             {index === 0 ||
             pox3Events.txid[index - 1] !== pox3Events.txid[index] ? (
               <>

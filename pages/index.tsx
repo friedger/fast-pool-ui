@@ -19,6 +19,8 @@ export default function Home() {
           <InfoCard>
             <Box mx={["loose", "extra-loose"]}>
               <Flex flexDirection="column" pt="extra-loose" pb="base-loose">
+                <Status cycleId={NEXT_CYCLE} next/>
+                <Hr />
                 <Status cycleId={NEXT_CYCLE - 1} />
                 <Hr />
                 <Status cycleId={NEXT_CYCLE - 2} />

@@ -11,7 +11,7 @@ import { ClarityType } from "@stacks/transactions";
 import { Box, Stack, Text } from "@stacks/ui";
 import { useEffect, useState } from "react";
 
-export function Status({ cycleId }: { cycleId: number }) {
+export function Status({ cycleId, next }: { cycleId: number; next?: boolean }) {
   const [poolStatus, setPoolStatus] = useState<PoolStatus>();
 
   useEffect(() => {
@@ -31,10 +31,11 @@ export function Status({ cycleId }: { cycleId: number }) {
             fontFamily="Open Sauce"
             fontWeight={500}
             letterSpacing="-0.02em"
+            color={next ? "#ddd" : undefined}
             mt="extra-tight"
             pb="base-loose"
           >
-            Cycle {cycleId}
+            Cycle {cycleId} {next ? " (next)" : null}
           </Text>
         </a>
       </Stack>
